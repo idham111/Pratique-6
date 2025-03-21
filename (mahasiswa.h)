@@ -1,0 +1,30 @@
+#ifndef MAHASISWA_H
+#define MAHASISWA_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct mahasiswa {
+    char nama[100];
+    int nilai_uts;
+    struct mahasiswa* next;
+} Mahasiswa;
+
+// Fungsi utama
+Mahasiswa* createMahasiswa(char* nama, int nilai_uts);
+void destroyList(Mahasiswa** head);
+int validateMahasiswa(Mahasiswa* mahasiswa);
+void setMahasiswa(Mahasiswa* mahasiswa, char* nama, int nilai_uts);
+void printMahasiswa(Mahasiswa* mahasiswa);
+
+// Fungsi list
+Mahasiswa* insertSorted(Mahasiswa* head, char* nama, int nilai_uts);
+void printListAsc(Mahasiswa* head);
+void printListDesc(Mahasiswa* head);
+int countList(Mahasiswa* head);
+Mahasiswa* copyListAbove70(Mahasiswa* head, Mahasiswa* listL2);
+Mahasiswa* removeDuplicate(Mahasiswa* head);
+void deleteList(Mahasiswa* head);
+
+#endif

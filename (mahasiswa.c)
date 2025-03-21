@@ -1,0 +1,151 @@
+#include "mahasiswa.h"
+
+// Membuat elemen mahasiswa baru
+Mahasiswa* createMahasiswa(char* nama, int nilai_uts) {
+    Mahasiswa* newMahasiswa = (Mahasiswa*)malloc(sizeof(Mahasiswa));
+    if (newMahasiswa == NULL) {
+        printf("Memory allocation failed!\n");
+        return NULL;
+    }
+    strcpy(newMahasiswa->nama, nama);
+    newMahasiswa->nilai_uts = nilai_uts;
+    newMahasiswa->next = NULL;
+    return newMahasiswa;
+}
+
+// Menghancurkan list
+void destroyList(Mahasiswa** head) {
+    Mahasiswa* current = *head;
+    Mahasiswa* temp;
+    while (current != NULL) {
+        temp = current;
+        current = current->next;
+        free(temp);
+    }
+    *head = NULL;
+}
+
+// Memvalidasi data mahasiswa (misalnya nama tidak kosong)
+int validateMahasiswa(Mahasiswa* mahasiswa) {
+    return (mahasiswa != NULL && strlen(mahasiswa->nama) > 0 && mahasiswa->nilai_uts >= 0);
+}
+
+// Menentukan nilai mahasiswa
+void setMahasiswa(Mahasiswa* mahasiswa, char* nama, int nilai_uts) {
+    if (mahasiswa != NULL) {
+        strcpy(mahasiswa->nama, nama);
+        mahasiswa->nilai_uts = nilai_uts;
+    }
+}
+
+// Mencetak data mahasiswa
+void printMahasiswa(Mahasiswa* mahasiswa) {
+    if (mahasiswa != NULL) {
+        printf("Nama: %s, Nilai UTS: %d\n", mahasiswa->nama, mahasiswa->nilai_uts);
+    }
+}
+
+// Menyisipkan elemen ke dalam list sesuai urutan ascending berdasarkan nama
+Mahasiswa* insertSorted(Mahasiswa* head, char* nama, int nilai_uts) {
+    Mahasiswa* newMahasiswa = createMahasiswa(nama, nilai_uts);
+    if (head == NULL || strcmp(head->nama, nama) > 0) {
+        newMahasiswa->next = head;
+        return newMahasiswa;
+    }
+
+    Mahasiswa* current = head;
+    while (current->next != NULL && strcmp(current->next->nama, nama) < 0) {
+        current = current->next;
+    }
+
+    newMahasiswa->next = current->next;
+    current->next = newMahasiswa;
+    return head;
+}
+
+// Menampilkan list secara ascending berdasarkan nama
+void printListAsc(Mahasiswa* head) {
+    Mahasiswa* current = head;
+    while (current != NULL) {
+        printMahasiswa(current);
+        current = current->next;
+    }
+}
+
+// Menampilkan list secara descending berdasarkan nilai_uts
+void printListDesc(Mahasiswa* head) {
+    // Menggunakan array untuk menyimpan mahasiswa
+    Mahasiswa* current = head;
+    Mahasiswa* array[100];
+    int count = 0;
+
+    while (current != NULL) {
+        array[count++] = current;
+        current = current->next;
+    }
+
+    // Sorting berdasarkan nilai_uts secara descending
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = i + 1; j < count; j++) {
+            if (array[i]->nilai_uts < array[j]->nilai_uts) {
+                Mahasiswa* temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+    }
+
+    // Menampilkan list setelah sorting
+    for (int i = 0; i < count; i++) {
+        printMahasiswa(array[i]);
+    }
+}
+
+// Menghitung jumlah elemen di list
+int countList(Mahasiswa* head) {
+    int count = 0;
+    Mahasiswa* current = head;
+    while (current != NULL) {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
+
+// Menyalin elemen dengan nilai_uts > 70 ke list L2
+Mahasiswa* copyListAbove70(Mahasiswa* head, Mahasiswa* listL2) {
+    Mahasiswa* current = head;
+    while (current != NULL) {
+        if (current->nilai_uts > 70) {
+            listL2 = insertSorted(listL2, current->nama, current->nilai_uts);
+        }
+        current = current->next;
+    }
+    return listL2;
+}
+
+// Menghapus elemen duplikat pada list
+Mahasiswa* removeDuplicate(Mahasiswa* head) {
+    Mahasiswa* current = head;
+    Mahasiswa* prev = NULL;
+    while (current != NULL && current->next != NULL) {
+        prev = current;
+        while (prev->next != NULL) {
+            if (strcmp(current->nama, prev->next->nama) == 0) {
+                Mahasiswa* temp = prev->next;
+                prev->next = prev->next->next;
+                free(temp);
+            } else {
+                prev = prev->next;
+            }
+        }
+        current = current->next;
+    }
+    return head;
+}
+
+// Menghapus list dan semua elemennya
+void deleteList(Mahasiswa* head) {
+    destroyList(&head);
+}
+

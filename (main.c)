@@ -1,0 +1,69 @@
+#include "mahasiswa.h"
+
+int main() {
+    Mahasiswa* listL1 = NULL;
+    Mahasiswa* listL2 = NULL;
+
+    int option;
+    char nama[100];
+    int nilai_uts;
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Tambah Mahasiswa ke List L1\n");
+        printf("2. Tampilkan List L1 (Ascending)\n");
+        printf("3. Tampilkan List L1 (Descending)\n");
+        printf("4. Hitung Jumlah Mahasiswa di List L1\n");
+        printf("5. Salin Mahasiswa dengan Nilai > 70 ke List L2\n");
+        printf("6. Tampilkan List L2\n");
+        printf("7. Hapus Duplikat di List L2\n");
+        printf("8. Tampilkan List L2 Setelah Duplikat Dihapus\n");
+        printf("9. Hapus Semua List dan Keluar\n");
+        printf("Pilih opsi: ");
+        scanf("%d", &option);
+
+        switch(option) {
+            case 1:
+                printf("Masukkan Nama Mahasiswa: ");
+                scanf(" %[^\n]", nama);
+                printf("Masukkan Nilai UTS: ");
+                scanf("%d", &nilai_uts);
+                listL1 = insertSorted(listL1, nama, nilai_uts);
+                break;
+            case 2:
+                printf("Tampilan List L1 (Ascending):\n");
+                printListAsc(listL1);
+                break;
+            case 3:
+                printf("Tampilan List L1 (Descending):\n");
+                printListDesc(listL1);
+                break;
+            case 4:
+                printf("Jumlah Mahasiswa di List L1: %d\n", countList(listL1));
+                break;
+            case 5:
+                listL2 = copyListAbove70(listL1, listL2);
+                break;
+            case 6:
+                printf("Tampilan List L2:\n");
+                printListAsc(listL2);
+                break;
+            case 7:
+                listL2 = removeDuplicate(listL2);
+                break;
+            case 8:
+                printf("Tampilan List L2 Setelah Duplikat Dihapus:\n");
+                printListAsc(listL2);
+                break;
+            case 9:
+                deleteList(listL1);
+                deleteList(listL2);
+                printf("List Dihapus. Program selesai.\n");
+                break;
+            default:
+                printf("Opsi tidak valid!\n");
+        }
+    } while (option != 9);
+
+    return 0;
+}
